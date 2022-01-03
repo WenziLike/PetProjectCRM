@@ -1,4 +1,4 @@
-package com.crm.backendcrm.model;
+package com.crm.backendcrm.application.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

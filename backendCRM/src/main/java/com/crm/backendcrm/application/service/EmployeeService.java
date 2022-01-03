@@ -1,8 +1,8 @@
-package com.crm.backendcrm.service;
+package com.crm.backendcrm.application.service;
 
-import com.crm.backendcrm.exception.UserNotFoundException;
-import com.crm.backendcrm.model.Employee;
-import com.crm.backendcrm.repository.EmployeeRepository;
+import com.crm.backendcrm.application.exception.UserNotFoundException;
+import com.crm.backendcrm.application.model.Employee;
+import com.crm.backendcrm.application.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

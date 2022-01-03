@@ -1,7 +1,7 @@
 package com.crm.backendcrm;
 
-import com.crm.backendcrm.model.Employee;
-import com.crm.backendcrm.service.EmployeeService;
+import com.crm.backendcrm.application.model.Employee;
+import com.crm.backendcrm.application.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

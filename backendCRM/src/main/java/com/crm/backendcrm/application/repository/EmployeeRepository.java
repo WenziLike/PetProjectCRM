@@ -1,6 +1,6 @@
-package com.crm.backendcrm.repository;
+package com.crm.backendcrm.application.repository;
 
-import com.crm.backendcrm.model.Employee;
+import com.crm.backendcrm.application.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
