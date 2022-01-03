@@ -1,0 +1,49 @@
+*.class
+
+# Gradle
+.gradle
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Eclipse #
+.settings
+.project
+.classpath
+.studio
+target
+
+# Apple # 
+.DS_Store
+
+# Intellij #
+.idea
+*.iml
+*.log
+
+# VSCode
+.vscode
+
+# logback
+logback.out.xml
+
+backendCRM/src/main/resources/public/
+backendCRM/target
+frontendCRM/dist/
+frontendCRM/node/
+frontendCRM/coverage/
+frontendCRM/node_modules/
+frontendCRM/npm-debug.log
+frontendCRM/target
+frontendCRM/test-output
+frontendCRM/tests/e2e/reports
+frontendCRM/tests/unit/coverage
+frontendCRM/yarn-error.log
+frontendCRM/yarn.lock
+
+security/target/
+selenium-debug.log
+
+!.mvn/wrapper/maven-wrapper.jar
