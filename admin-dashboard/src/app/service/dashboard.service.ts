@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
 import {SystemHealth} from "../interface/system-health";
+import {SystemCpu} from "../interface/system-cpu";
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class DashboardService {
     return this.http.get<SystemHealth>(`${this.SERVER_URL}/health`);
   }
 
-  public getSystemCpu(): Observable<any> {
-    return this.http.get<any>(`${this.SERVER_URL}/metrics/system.cpu.count`);
+  public getSystemCpu(): Observable<SystemCpu> {
+    return this.http.get<SystemCpu>(`${this.SERVER_URL}/metrics/system.cpu.count`);
   }
 
   public getProcessUptime(): Observable<any> {
