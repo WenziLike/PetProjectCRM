@@ -75,6 +75,8 @@ export class AppComponent implements OnInit {
     )
   }
 
+
+
   // system Process time
   private getProcessUptime(isUpdateTime: boolean): void {
     this.dashboardService.getProcessUptime().subscribe(
@@ -82,6 +84,9 @@ export class AppComponent implements OnInit {
         console.log(response)
         this.timestamp = Math.round(response.measurements[0].value)
         this.processUptime = this.formateUptime(this.timestamp)
+        if(isUpdateTime){
+          this.updateTime()
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message)
@@ -130,12 +135,19 @@ export class AppComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
   }
 
-  private  formateUptime(timestamp: number): string {
+  private formateUptime(timestamp: number): string {
     const hours = Math.floor(timestamp / 60 / 60)
     const minutes = Math.floor(timestamp / 60) - (hours * 60)
     const seconds = timestamp % 60
     return hours.toString().padStart(2, '0') + 'h' +
       minutes.toString().padStart(2, '0') + 'm' + seconds.toString().padStart(2, '0') + 's'
 
+  }
+
+  private updateTime(): void {
+    setInterval(() => {
+      this.processUptime = this.formateUptime(this.timestamp + 1)
+      this.timestamp++
+    }, 1000)
   }
 }
