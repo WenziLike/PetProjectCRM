@@ -39,7 +39,7 @@
 </div>
 
 
-<div class="container mx-auto mt-8">
+<div class="container px-4 mx-auto mt-8">
   <!-- ================================ Card Response-->
   <div class="wrapper flex justify-center">
     <div class="shadow stats mr-6">
@@ -71,27 +71,27 @@
       </div>
     </div>
   </div>
-  <!-- ================================ Http response-->
+  <!-- ================================ Http response Diagram-->
   <div class="flex justify-around mt-8">
 
-    <div>
+    <div style="display: block;width: 400px;height: 400px">
       Http Response
-      <canvas id="barChart" style="display: block" width="400" height="400"></canvas>
+      <canvas id="barChart" style="display: block; width: 350px;height: 350px"></canvas>
     </div>
-    <div>
+    <div style="display: block;width: 400px;height: 350px">
       Http Response
-      <canvas id="pieChart" style="display: block" width="350" height="350"></canvas>
+      <canvas id="pieChart" style="display: block;width: 400px;height: 400px"></canvas>
     </div>
   </div>
 
-  <h3>HTTP Traces</h3>
-  <button class="btn btn-info btn-sm mb-4">
+  <h3 class="mt-8">HTTP Traces</h3>
+  <button (click)="exportTableToExcel()" class="btn btn-info btn-sm mb-4">
     <i class="fa fa-external-link mr-2" aria-hidden="true"></i>
     export to Excel
   </button>
   <!-- ================================ LIST-->
   <div class="overflow-x-auto">
-    <table class="table w-full">
+    <table class="table w-full" id="httptrace-table">
       <thead>
       <tr>
         <th></th>
@@ -104,7 +104,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let trace of traceList; let idx=index" class="cursor-pointer">
+      <tr
+        *ngFor="let trace of traceList |
+        paginate:{id: 'trace-list', itemsPerPage: pageSize, currentPage: page, totalItems: traceList?.length};
+        let idx=index"
+        class="cursor-pointer">
         <th>{{idx + 1}}</th>
         <td (click)="onSelectTrace(trace)">{{trace?.timestamp | date: 'medium'}}</td>
         <td (click)="onSelectTrace(trace)">{{trace?.request.method}}</td>
@@ -135,8 +139,22 @@
       </tr>
       </tbody>
     </table>
+    <pagination-controls class="btn-group" id="trace-list" (pageChange)="page = $event"
+                         [maxSize]="5"
+                         [directionLinks]="true"
+    ></pagination-controls>
   </div>
 </div>
+
+
+<!--<div class="btn-group" id="trace-list" (pageChange)="page = $event">-->
+<!--  <button class="btn">Previous</button>-->
+<!--  <button class="btn">1</button>-->
+<!--  <button class="btn btn-active">2</button>-->
+<!--  <button class="btn">3</button>-->
+<!--  <button class="btn">4</button>-->
+<!--  <button class="btn">Next</button>-->
+<!--</div>-->
 
 <!-- ================================== MODAL WINDOW-->
 <input type="checkbox" id="info-modal" class="modal-toggle">

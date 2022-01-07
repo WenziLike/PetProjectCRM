@@ -6,6 +6,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import *  as Chart from "Chart.js"
 import {ChartType} from "./enum/chart-type";
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,6 +26,8 @@ export class AppComponent implements OnInit {
   public httpDefaultTraces: any[] = []
   public toggle: any = false
   public timestamp: number | any;
+  public pageSize = 5
+  public page = 1
 
   constructor(private dashboardService: DashboardService) {
   }
@@ -64,7 +67,7 @@ export class AppComponent implements OnInit {
     )
   }
 
-   /** system Health*/
+  /** system Health*/
   private getSystemHealth(): void {
     this.dashboardService.getSystemHealth().subscribe(
       (response: SystemHealth) => {
@@ -176,9 +179,25 @@ export class AppComponent implements OnInit {
       options: {
         title: {display: true, text: [`Last 100 Requests as of ${new Date()}`]},
         legend: {display: true},
-        display:true
+        display: true
       }
     })
+  }
+
+  /** EXPORT to Excel */
+  public exportTableToExcel(): void {
+    const downloadLink = document.createElement('a')
+
+    const dataType = 'data:application/vnd.ms-excel;base64'
+    const table = document.getElementById('httptrace-table')
+
+
+    // @ts-ignore
+    const tableHtml = table.outerHTML.replace(/ /g, '%20')
+    document.body.appendChild(downloadLink)
+    downloadLink.href = 'data:' + dataType + ' ' + tableHtml
+    downloadLink.download = 'httptrace.xls'
+    downloadLink.click()
   }
 
 
