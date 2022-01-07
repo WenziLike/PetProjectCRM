@@ -4,6 +4,7 @@ import {SystemCpu} from "./interface/system-cpu";
 import {DashboardService} from "./service/dashboard.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import *  as Chart from "Chart.js"
+import {ChartType} from "./enum/chart-type";
 
 @Component({
   selector: 'app-root',
@@ -136,7 +137,7 @@ export class AppComponent implements OnInit {
     const barChartElement = document.getElementById('barChart')
     // @ts-ignore
     return new Chart(barChartElement, {
-      type: 'bar',
+      type: ChartType.BAR,
       data: {
         labels: ['200', '404', '400', '500'],
         datasets: [{
@@ -162,7 +163,7 @@ export class AppComponent implements OnInit {
     const pieChartElement = document.getElementById('pieChart')
     // @ts-ignore
     return new Chart(pieChartElement, {
-      type: 'pie',
+      type: ChartType.PIE,
       data: {
         labels: ['200', '404', '400', '500'],
         datasets: [{
