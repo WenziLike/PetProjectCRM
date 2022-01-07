@@ -34,12 +34,12 @@
     </div>
   </div>
   <div class="navbar-end">
-    <button class="btn btn-outline btn-primary btn-sm">Refresh Data</button>
+    <button (click)="onRefreshData()" class="btn btn-outline btn-primary btn-sm">Refresh Data</button>
   </div>
 </div>
 
 
-<div class="container px-8 m-auto mt-8">
+<div class="container mx-auto mt-8">
   <!-- ================================ Card Response-->
   <div class="wrapper flex justify-center">
     <div class="shadow stats mr-6">
@@ -73,8 +73,15 @@
   </div>
   <!-- ================================ Http response-->
   <div class="flex justify-around mt-8">
-    <span>Http Response</span>
-    <span>Http Response</span>
+
+    <div>
+      Http Response
+      <canvas id="barChart" style="display: block"></canvas>
+    </div>
+    <div>
+      Http Response
+      <canvas id="pieChart" style="display: block"></canvas>
+    </div>
   </div>
 
   <h3>HTTP Traces</h3>

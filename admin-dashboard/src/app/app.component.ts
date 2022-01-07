@@ -75,7 +75,18 @@ export class AppComponent implements OnInit {
     )
   }
 
-
+  // Refresh Databases
+  public onRefreshData(): void {
+    this.http200Traces = []
+    this.http400Traces = []
+    this.http404Traces = []
+    this.http500Traces = []
+    this.httpDefaultTraces = []
+    this.getTraces()
+    this.getCpuUsage()
+    this.getSystemHealth()
+    this.getProcessUptime(false)
+  }
 
   // system Process time
   private getProcessUptime(isUpdateTime: boolean): void {
@@ -84,7 +95,7 @@ export class AppComponent implements OnInit {
         console.log(response)
         this.timestamp = Math.round(response.measurements[0].value)
         this.processUptime = this.formateUptime(this.timestamp)
-        if(isUpdateTime){
+        if (isUpdateTime) {
           this.updateTime()
         }
       },
