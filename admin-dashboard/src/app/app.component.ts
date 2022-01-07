@@ -3,6 +3,7 @@ import {SystemHealth} from "./interface/system-health";
 import {SystemCpu} from "./interface/system-cpu";
 import {DashboardService} from "./service/dashboard.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import *  as Chart from "Chart.js"
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,8 @@ export class AppComponent implements OnInit {
       (response: any) => {
         console.log(response.traces)
         this.processTraces(response.traces)
+        this.initializeBarChart()
+        this.initializePieChart()
       },
       (error: HttpErrorResponse) => {
         alert(error.message)
@@ -60,7 +63,7 @@ export class AppComponent implements OnInit {
     )
   }
 
-  // system Health
+   /** system Health*/
   private getSystemHealth(): void {
     this.dashboardService.getSystemHealth().subscribe(
       (response: SystemHealth) => {
@@ -75,7 +78,7 @@ export class AppComponent implements OnInit {
     )
   }
 
-  // Refresh Databases
+  /**  Refresh Databases*/
   public onRefreshData(): void {
     this.http200Traces = []
     this.http400Traces = []
@@ -128,6 +131,56 @@ export class AppComponent implements OnInit {
     })
   }
 
+  /** Add Char js for table diagrams id-> << barChart >> */
+  private initializeBarChart(): void {
+    const barChartElement = document.getElementById('barChart')
+    // @ts-ignore
+    return new Chart(barChartElement, {
+      type: 'bar',
+      data: {
+        labels: ['200', '404', '400', '500'],
+        datasets: [{
+          data: [this.http200Traces.length, this.http404Traces.length, this.http400Traces.length, this.http500Traces.length],
+          backgroundColor: ['rgb(40, 167, 69)', 'rgb(0, 123, 255)', 'rgb(253, 126, 20)', 'rgb(220, 53, 69)'],
+          borderColor: ['rgb(40, 167, 69)', 'rgb(0, 123, 255)', 'rgb(253, 126, 20)', 'rgb(220, 53, 69)'],
+          borderWidth: 3
+        }]
+      },
+      options: {
+        title: {display: true, text: [`Last 100 Requests as of ${new Date()}`]},
+        legend: {display: false},
+        scales: {
+          yAxes: [{ticks: {beginAtZero: true}}]
+        }
+      }
+    })
+  }
+
+  /** Add Char js for table diagrams id-> << pieChart >> */
+
+  private initializePieChart(): void {
+    const pieChartElement = document.getElementById('pieChart')
+    // @ts-ignore
+    return new Chart(pieChartElement, {
+      type: 'pie',
+      data: {
+        labels: ['200', '404', '400', '500'],
+        datasets: [{
+          data: [this.http200Traces.length, this.http404Traces.length, this.http400Traces.length, this.http500Traces.length],
+          backgroundColor: ['rgb(40, 167, 69)', 'rgb(0, 123, 255)', 'rgb(253, 126, 20)', 'rgb(220, 53, 69)'],
+          borderColor: ['rgb(40, 167, 69)', 'rgb(0, 123, 255)', 'rgb(253, 126, 20)', 'rgb(220, 53, 69)'],
+          borderWidth: 3
+        }]
+      },
+      options: {
+        title: {display: true, text: [`Last 100 Requests as of ${new Date()}`]},
+        legend: {display: true},
+        display:true
+      }
+    })
+  }
+
+
   public onSelectTrace(trace: any): void {
     this.selectedTrace = trace
     console.log(trace)
@@ -135,6 +188,7 @@ export class AppComponent implements OnInit {
     document.getElementById('info-modal').click()
   }
 
+  /** Converter in Bytes ,Tb, GB~ */
   private formatBytes(bytes: number): string {
     if (bytes === 0) {
       return '0 Bytes'
@@ -146,6 +200,7 @@ export class AppComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
   }
 
+  /** for formatting times*/
   private formateUptime(timestamp: number): string {
     const hours = Math.floor(timestamp / 60 / 60)
     const minutes = Math.floor(timestamp / 60) - (hours * 60)
@@ -155,6 +210,7 @@ export class AppComponent implements OnInit {
 
   }
 
+  /** Update time on page*/
   private updateTime(): void {
     setInterval(() => {
       this.processUptime = this.formateUptime(this.timestamp + 1)
