@@ -12,15 +12,17 @@ import {HttpErrorResponse} from "@angular/common/http";
 export class AppComponent implements OnInit {
   public traceList: any[] = []
   public selectedTrace: any
-  public systemHealth: SystemHealth | undefined
-  public systemCpu: SystemCpu | undefined
-  public processUptime: string | undefined
+  // @ts-ignore
+  public systemHealth: SystemHealth | any
+  public systemCpu!: SystemCpu | any
+  public processUptime: string | any
   public http200Traces: any[] = []
   public http400Traces: any[] = []
   public http404Traces: any[] = []
   public http500Traces: any[] = []
   public httpDefaultTraces: any[] = []
   public toggle: any = false
+  public timestamp: number | any;
 
   constructor(private dashboardService: DashboardService) {
   }
@@ -28,8 +30,11 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.getTraces()
     this.getCpuUsage()
+    this.getSystemHealth()
+    this.getProcessUptime(true)
   }
 
+// card response
   private getTraces(): void {
     this.dashboardService.getHttpTraces().subscribe(
       (response: any) => {
@@ -42,6 +47,7 @@ export class AppComponent implements OnInit {
     )
   }
 
+  // nav bar
   private getCpuUsage(): void {
     this.dashboardService.getSystemCpu().subscribe(
       (response: SystemCpu) => {
@@ -54,6 +60,36 @@ export class AppComponent implements OnInit {
     )
   }
 
+  // system Health
+  private getSystemHealth(): void {
+    this.dashboardService.getSystemHealth().subscribe(
+      (response: SystemHealth) => {
+        console.log(response)
+        this.systemHealth = response
+        this.systemHealth.components.diskSpace.details.free =
+          this.formatBytes(this.systemHealth.components.diskSpace.details.free)
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+      }
+    )
+  }
+
+  // system Process time
+  private getProcessUptime(isUpdateTime: boolean): void {
+    this.dashboardService.getProcessUptime().subscribe(
+      (response: any) => {
+        console.log(response)
+        this.timestamp = Math.round(response.measurements[0].value)
+        this.processUptime = this.formateUptime(this.timestamp)
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+      }
+    )
+  }
+
+  // list requests & response
   private processTraces(traces: any): void {
     this.traceList = traces
     this.traceList.forEach(trace => {
@@ -81,5 +117,25 @@ export class AppComponent implements OnInit {
     console.log(trace)
     // @ts-ignore
     document.getElementById('info-modal').click()
+  }
+
+  private formatBytes(bytes: number): string {
+    if (bytes === 0) {
+      return '0 Bytes'
+    }
+    const k = 1024
+    const dm = 2 < 0 ? 0 : 2
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+  }
+
+  private  formateUptime(timestamp: number): string {
+    const hours = Math.floor(timestamp / 60 / 60)
+    const minutes = Math.floor(timestamp / 60) - (hours * 60)
+    const seconds = timestamp % 60
+    return hours.toString().padStart(2, '0') + 'h' +
+      minutes.toString().padStart(2, '0') + 'm' + seconds.toString().padStart(2, '0') + 's'
+
   }
 }

@@ -6,25 +6,30 @@
   </div>
   <div class="hidden px-2 mx-2 navbar-center lg:flex">
     <div class="flex items-stretch ml-24">
-      <span class="mr-8">
+      <span class="mr-4">
         <i class="fa fa-server" aria-hidden="true"></i>
         System:
+        {{systemHealth?.status}}
       </span>
-      <a class="mr-8">
+      <a class="mr-4">
         <i class="fa fa-database" aria-hidden="true"></i>
         DB:
+        {{systemHealth?.components.db.details.database}} - {{systemHealth?.components.db.status}}
       </a>
-      <span class="mr-8">
+      <span class="mr-4">
         <i class="fa fa-hdd-o" aria-hidden="true"></i>
         Disk Space:
+        {{systemHealth?.components.diskSpace.details.free}}
       </span>
-      <span class="mr-8">
+      <span class="mr-4" [ngClass]="{'text-error': systemCpu?.measurements[0].value < 2 }">
         <i class="fa fa-microchip" aria-hidden="true"></i>
         Processors:
+        {{systemCpu?.measurements[0].value}}
       </span>
-      <span class="mr-8">
+      <span class="mr-4">
         <i class="fa fa-clock-o" aria-hidden="true"></i>
         Up Time:
+        {{processUptime}}
       </span>
     </div>
   </div>
@@ -35,7 +40,7 @@
 
 
 <div class="container px-8 m-auto mt-8">
-  <!--Card Response-->
+  <!-- ================================ Card Response-->
   <div class="wrapper flex justify-center">
     <div class="shadow stats mr-6">
       <div class="stat">
@@ -66,15 +71,18 @@
       </div>
     </div>
   </div>
-  <!--Http response-->
+  <!-- ================================ Http response-->
   <div class="flex justify-around mt-8">
     <span>Http Response</span>
     <span>Http Response</span>
   </div>
 
   <h3>HTTP Traces</h3>
-  <button class="btn btn-info btn-sm mb-4"><i class="fa fa-external-link mr-2" aria-hidden="true"></i>export to Excel
+  <button class="btn btn-info btn-sm mb-4">
+    <i class="fa fa-external-link mr-2" aria-hidden="true"></i>
+    export to Excel
   </button>
+  <!-- ================================ LIST-->
   <div class="overflow-x-auto">
     <table class="table w-full">
       <thead>
@@ -122,7 +130,8 @@
     </table>
   </div>
 </div>
-<!--MODAL WINDOW-->
+
+<!-- ================================== MODAL WINDOW-->
 <input type="checkbox" id="info-modal" class="modal-toggle">
 <div class="modal">
   <div class="modal-box">
@@ -178,7 +187,7 @@
       </p>
       <p>
         <strong class="mr-2">User Agent (Web Client): </strong>
-       {{selectedTrace?.request.headers['user-agent']}}
+        {{selectedTrace?.request.headers['user-agent']}}
       </p>
 
     </div>
