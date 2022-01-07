@@ -113,14 +113,16 @@
         </td>
         <td (click)="onSelectTrace(trace)">{{trace?.request.uri}}</td>
         <td>
-          <button (click)="onSelectTrace(trace)" class="badge badge-info focus:outline-none"> <i class="fa fa-eye" aria-hidden="true"></i></button>
+          <button (click)="onSelectTrace(trace)" class="badge badge-info focus:outline-none"><i class="fa fa-eye"
+                                                                                                aria-hidden="true"></i>
+          </button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
-
+<!--MODAL WINDOW-->
 <input type="checkbox" id="info-modal" class="modal-toggle">
 <div class="modal">
   <div class="modal-box">
@@ -133,23 +135,80 @@
         Request
       </a>
       <input (change)="toggle = !toggle" type="checkbox" checked="checked" class="toggle">
-      <a class="link link-primary no-underline"><i class="fa fa-sliders text-base-content" aria-hidden="true"></i> Response</a>
+      <a class="link link-primary no-underline"><i class="fa fa-sliders text-base-content" aria-hidden="true"></i>
+        Response</a>
     </div>
     <div *ngIf="toggle; else response" class="flex flex-col my-2">
-      <strong>Time Stamp: </strong>
-      <strong>Time Taken: </strong>
-      <strong>Request Method: </strong>
-      <strong>Remote Address: </strong>
-      <strong>URI: </strong>
-      <strong>Origin: </strong>
-      <strong>User Agent (Web Client): </strong>
+      <p>
+        <strong class="mr-2">Time Stamp: </strong>
+        <span class="stat-desc">
+          {{selectedTrace?.timestamp | date: 'medium'}}
+        </span>
+
+      </p>
+      <p>
+        <strong class="mr-2">Time Taken: </strong>
+        <span class="stat-desc">
+        {{selectedTrace?.timeTaken}}
+        </span>
+      </p>
+      <p>
+        <strong class="mr-2">Request Method: </strong>
+        <span class="stat-desc">
+        {{selectedTrace?.request.method}}
+        </span>
+      </p>
+      <p>
+        <strong class="mr-2">Remote Address: </strong>
+        <span class="stat-desc">
+        {{selectedTrace?.request.remoteAddress}}
+        </span>
+      </p>
+      <p>
+        <strong class="mr-2">URI: </strong>
+        <span class="stat-desc">
+        {{selectedTrace?.request.uri}}
+        </span>
+      </p>
+      <p>
+        <strong class="mr-2">Origin: </strong>
+        <span class="stat-desc">
+        {{selectedTrace?.request.headers['origin']}}
+        </span>
+      </p>
+      <p>
+        <strong class="mr-2">User Agent (Web Client): </strong>
+       {{selectedTrace?.request.headers['user-agent']}}
+      </p>
+
     </div>
     <ng-template #response>
       <div class="flex flex-col my-2">
-        <strong>Status: </strong>
-        <strong>Date: </strong>
-        <strong>Content Type: </strong>
-        <strong>Server Allowed Origins: </strong>
+        <p>
+          <strong class="mr-2">Status: </strong>
+          <span class="stat-desc">
+          {{selectedTrace?.response.status}}
+          </span>
+        </p>
+        <p>
+          <strong class="mr-2">Date: </strong>
+          <span class="stat-desc">
+          {{selectedTrace?.response.headers['Date']}}
+          </span>
+        </p>
+        <p>
+          <strong class="mr-2">Content Type: </strong>
+          <span class="stat-desc">
+          {{selectedTrace?.response.headers['Content-Type']}}
+          </span>
+        </p>
+        <p>
+          <strong class="mr-2">Server Allowed Origins: </strong>
+          <span class="stat-desc">
+          {{selectedTrace?.response.headers['Access-Control-Allow-Origin']}}
+          </span>
+        </p>
+
       </div>
     </ng-template>
 

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SystemHealth} from "./interface/system-health";
 import {SystemCpu} from "./interface/system-cpu";
 import {DashboardService} from "./service/dashboard.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -24,17 +25,33 @@ export class AppComponent implements OnInit {
   constructor(private dashboardService: DashboardService) {
   }
 
+  ngOnInit(): void {
+    this.getTraces()
+    this.getCpuUsage()
+  }
+
   private getTraces(): void {
     this.dashboardService.getHttpTraces().subscribe(
       (response: any) => {
         console.log(response.traces)
         this.processTraces(response.traces)
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
       }
     )
   }
 
-  ngOnInit(): void {
-    this.getTraces()
+  private getCpuUsage(): void {
+    this.dashboardService.getSystemCpu().subscribe(
+      (response: SystemCpu) => {
+        console.log(response)
+        this.systemCpu = response
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+      }
+    )
   }
 
   private processTraces(traces: any): void {
@@ -60,6 +77,8 @@ export class AppComponent implements OnInit {
   }
 
   public onSelectTrace(trace: any): void {
+    this.selectedTrace = trace
+    console.log(trace)
     // @ts-ignore
     document.getElementById('info-modal').click()
   }
