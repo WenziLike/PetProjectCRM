@@ -7,18 +7,23 @@
   <div class="hidden px-2 mx-2 navbar-center lg:flex">
     <div class="flex items-stretch ml-24">
       <span class="mr-8">
+        <i class="fa fa-server" aria-hidden="true"></i>
         System:
       </span>
       <a class="mr-8">
+        <i class="fa fa-database" aria-hidden="true"></i>
         DB:
       </a>
       <span class="mr-8">
+        <i class="fa fa-hdd-o" aria-hidden="true"></i>
         Disk Space:
       </span>
       <span class="mr-8">
+        <i class="fa fa-microchip" aria-hidden="true"></i>
         Processors:
       </span>
       <span class="mr-8">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
         Up Time:
       </span>
     </div>
@@ -30,44 +35,46 @@
 
 
 <div class="container px-8 m-auto mt-8">
+  <!--Card Response-->
   <div class="wrapper flex justify-center">
     <div class="shadow stats mr-6">
       <div class="stat">
         <div class="text-success">200 Response</div>
-        <div class="stat-value">89,400</div>
-        <div class="stat-desc">Updated:</div>
+        <div class="stat-value">{{http200Traces?.length}}</div>
+        <div class="stat-desc">Updated: {{http200Traces[0]?.timestamp | date: 'short'}}</div>
       </div>
     </div>
     <div class="shadow stats mr-6">
       <div class="stat">
         <div class="text-info">404 Response</div>
-        <div class="stat-value">60,400</div>
-        <div class="stat-desc">Updated:</div>
+        <div class="stat-value">{{http404Traces?.length}}</div>
+        <div class="stat-desc">Updated: {{http404Traces[0]?.timestamp | date: 'short'}}</div>
       </div>
     </div>
     <div class="shadow stats mr-6">
       <div class="stat">
         <div class="text-warning">400 Response</div>
-        <div class="stat-value">89,400</div>
-        <div class="stat-desc">Updated:</div>
+        <div class="stat-value">{{http400Traces?.length}}</div>
+        <div class="stat-desc">Updated: {{http400Traces[0]?.timestamp | date: 'short'}}</div>
       </div>
     </div>
     <div class="shadow stats mr-6">
       <div class="stat">
         <div class="text-error">500 Response</div>
-        <div class="stat-value">89,400</div>
-        <div class="stat-desc">Updated:</div>
+        <div class="stat-value">{{http500Traces?.length}}</div>
+        <div class="stat-desc">Updated: {{http500Traces[0]?.timestamp | date: 'short'}}</div>
       </div>
     </div>
   </div>
-
+  <!--Http response-->
   <div class="flex justify-around mt-8">
     <span>Http Response</span>
     <span>Http Response</span>
   </div>
 
   <h3>HTTP Traces</h3>
-  <button class="btn btn-info btn-sm mb-4">export to Excel</button>
+  <button class="btn btn-info btn-sm mb-4"><i class="fa fa-external-link mr-2" aria-hidden="true"></i>export to Excel
+  </button>
   <div class="overflow-x-auto">
     <table class="table w-full">
       <thead>
@@ -75,28 +82,82 @@
         <th></th>
         <th>Time Stamp</th>
         <th>Method</th>
-        <th>Time Taken(ms)</th>
+        <th>Time Taken (ms)</th>
         <th>Status</th>
         <th>Uri</th>
         <th>View</th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th>1</th>
-        <td>Cy Ganderton</td>
-        <td>Quality Control Specialist</td>
-        <td>Blue</td>
-        <td></td>
-        <td></td>
+      <tr *ngFor="let trace of traceList; let idx=index" class="cursor-pointer">
+        <th>{{idx + 1}}</th>
+        <td (click)="onSelectTrace(trace)">{{trace?.timestamp | date: 'medium'}}</td>
+        <td (click)="onSelectTrace(trace)">{{trace?.request.method}}</td>
+        <td (click)="onSelectTrace(trace)">{{trace?.timeTaken}}</td>
+        <td (click)="onSelectTrace(trace)" [ngSwitch]="trace?.response.status">
+
+          <span *ngSwitchCase="'200'" class="badge badge-success">
+            {{trace?.response.status}}
+          </span>
+          <span *ngSwitchCase="'404'" class="badge badge-info">
+            {{trace?.response.status}}
+          </span>
+          <span *ngSwitchCase="'400'" class="badge badge-warning">
+           {{trace?.response.status}}
+          </span>
+          <span *ngSwitchCase="'500'" class="badge badge-error">
+            {{trace?.response.status}}
+          </span>
+
+
+        </td>
+        <td (click)="onSelectTrace(trace)">{{trace?.request.uri}}</td>
         <td>
-          <div class="badge badge-info">
-            info
-          </div>
+          <button (click)="onSelectTrace(trace)" class="badge badge-info focus:outline-none"> <i class="fa fa-eye" aria-hidden="true"></i></button>
         </td>
       </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<input type="checkbox" id="info-modal" class="modal-toggle">
+<div class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold">HTTP Trace Details</h3>
+    <hr>
+    <div class="mt-4 flex justify-around">
+
+      <a class="link link-primary no-underline">
+        <i class="fa fa-sitemap text-base-content" aria-hidden="true"></i>
+        Request
+      </a>
+      <input (change)="toggle = !toggle" type="checkbox" checked="checked" class="toggle">
+      <a class="link link-primary no-underline"><i class="fa fa-sliders text-base-content" aria-hidden="true"></i> Response</a>
+    </div>
+    <div *ngIf="toggle; else response" class="flex flex-col my-2">
+      <strong>Time Stamp: </strong>
+      <strong>Time Taken: </strong>
+      <strong>Request Method: </strong>
+      <strong>Remote Address: </strong>
+      <strong>URI: </strong>
+      <strong>Origin: </strong>
+      <strong>User Agent (Web Client): </strong>
+    </div>
+    <ng-template #response>
+      <div class="flex flex-col my-2">
+        <strong>Status: </strong>
+        <strong>Date: </strong>
+        <strong>Content Type: </strong>
+        <strong>Server Allowed Origins: </strong>
+      </div>
+    </ng-template>
+
+    <hr class="my-2">
+
+    <div class="modal-action">
+      <label for="info-modal" class="btn btn-sm">Close</label>
+    </div>
   </div>
 </div>
 
