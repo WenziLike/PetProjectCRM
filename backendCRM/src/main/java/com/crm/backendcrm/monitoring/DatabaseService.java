@@ -12,13 +12,13 @@ public class DatabaseService implements HealthIndicator {
     @Override
     public Health health() {
         if (isDatabaseHealth()) {
-            return Health.up().withDetail(DATABASE_SERVICE, "Service is running").build();
+            return Health.down().withDetail(DATABASE_SERVICE, "Service in not available").build();
         }
-        return Health.down().withDetail(DATABASE_SERVICE, "Service in not available").build();
+        return Health.up().withDetail(DATABASE_SERVICE, "Service is running").build();
     }
 
     private boolean isDatabaseHealth() {
         //logic
-        return true;
+        return false;
     }
 }
